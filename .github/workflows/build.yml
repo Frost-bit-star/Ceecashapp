@@ -1,27 +1,35 @@
 # buildozer.spec
 
-[app]
-title = cee cash
-package.name = ceecash_webview
-package.domain = com.wuaze.ceecash
+title: cee cash
+package:
+  name: ceecash_app
+  domain: com.wuaze.ceecash
 
-source.include_exts = py,png,jpg,kv,atlas,gif,mp4
+source:
+  include_exts: 
+    - py
+    - png
+    - jpg
+    - kv
+    - atlas
+    - gif
+    - mp4
 
-requirements = 
-    python3
-    kivy
-    kivy-garden
-    kivy-garden.webview
+requirements: 
+  - python3
+  - kivy
+  - kivy-garden
+  - kivy-garden.webview
 
-android.permissions = 
-    INTERNET
+android:
+  permissions: 
+    - INTERNET
+  app_icon: icon.jpg
+  splash_screen:
+    image: splash.mp4
+    fullscreen: true
 
-android.app_icon = icon.jpg
-
-android.splash_screen.image = splash.mp4
-android.splash_screen.fullscreen = true
-
-orientation = portrait
+orientation: portrait
 
 # Ensure Buildozer is accessible from the root directory
-buildozer_path = ./buildozer.spec
+buildozer_path: ./buildozer.spec
