@@ -16,28 +16,32 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
 
-      - name: Setup Python
+      - name: Set up Python
         uses: actions/setup-python@v4
         with:
           python-version: "3.9"
 
       - name: Install dependencies
         run: |
+          sudo apt update && sudo apt install -y zip unzip openjdk-11-jdk python3-pip
           python -m pip install --upgrade pip
-          pip install kivy buildozer cython
-          pip install kivy_garden
-          garden install webview
-          garden install sidebar
+          pip install --upgrade Cython kivy buildozer kivy_garden
+          garden install webview || echo "Webview install failed"
+          garden install sidebar || echo "Sidebar install failed"
 
-      - name: Install Buildozer dependencies
+      - name: Grant Execute Permissions
         run: |
-          sudo apt update && sudo apt install -y buildozer zip unzip openjdk-11-jdk python3-pip
+          chmod +x ~/.local/bin/buildozer || echo "Buildozer not found"
 
       - name: Initialize Buildozer
-        run: buildozer init
+        run: |
+          buildozer init
+          cat buildozer.spec  
 
       - name: Build APK with Buildozer
-        run: buildozer -v android debug
+        run: |
+          chmod +x ./buildozer
+          buildozer -v android debug || (cat ~/.buildozer/android/platform/python-for-android/dists/*/build.log && exit 1)
 
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
