@@ -1,35 +1,15 @@
-# buildozer.spec
-
-title: cee cash
-package:
-  name: ceecash_app
-  domain: com.wuaze.ceecash
-
-source:
-  include_exts: 
-    - py
-    - png
-    - jpg
-    - kv
-    - atlas
-    - gif
-    - mp4
-
-requirements: 
-  - python3
+name: cee_cash
+version: 1.0
+description: A Kivy application with a sidebar and web view functionality.
+author: Your Name
+requirements:
   - kivy
-  - kivy-garden
-  - kivy-garden.webview
-
-android:
-  permissions: 
-    - INTERNET
-  app_icon: icon.jpg
-  splash_screen:
-    image: splash.mp4
-    fullscreen: true
-
-orientation: portrait
-
-# Ensure Buildozer is accessible from the root directory
-buildozer_path: ./buildozer.spec
+  - kivy_garden.webview
+  - kivy_garden.sidebar
+source:
+  - main.py
+buildozer:
+  requirements: python3,kivy,kivy_garden.webview,kivy_garden.sidebar
+  android:
+    permissions:
+      - INTERNET
