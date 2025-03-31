@@ -1,15 +1,41 @@
-name: cee_cash
-version: 1.0
-description: A Kivy application with a sidebar and web view functionality.
-author: Your Name
-requirements:
-  - kivy
-  - kivy_garden.webview
-  - kivy_garden.sidebar
-source:
-  - main.py
-buildozer:
-  requirements: python3,kivy,kivy_garden.webview,kivy_garden.sidebar
-  android:
-    permissions:
-      - INTERNET
+name: Build CeeCash App
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v3
+
+      - name: Setup Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: "3.9"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install kivy kivy_garden
+          garden install webview
+          garden install sidebar
+
+      - name: Build APK with Buildozer
+        run: |
+          sudo apt update && sudo apt install -y buildozer
+          buildozer init
+          buildozer -v android debug
+          
+      - name: Upload APK Artifact
+        uses: actions/upload-artifact@v3
+        with:
+          name: CeeCash-APK
+          path: bin/*.apk
