@@ -1,3 +1,5 @@
+# Code Refactored
+
 name: Build CeeCash App
 
 on:
@@ -27,14 +29,14 @@ jobs:
           python -m pip install --upgrade pip
           pip install --upgrade Cython kivy buildozer kivy_garden
           for garden in webview sidebar; do
-            kivy_garden install $garden || echo "$garden install failed"
+            kivy_garden install "$garden" || echo "Failed to install garden: $garden"
           done
 
       - name: Grant Execute Permissions
         run: |
           chmod +x ~/.local/bin/buildozer || echo "Buildozer not found"
 
-      - name: Use existing Buildozer configuration
+      - name: Validate Buildozer Configuration
         run: |
           if [ -f buildozer.spec ]; then
             echo "Using existing buildozer.spec"
@@ -44,11 +46,11 @@ jobs:
 
       - name: Build APK with Buildozer
         run: |
-          export PATH=$HOME/.local/bin:$PATH
+          export PATH="$HOME/.local/bin:$PATH"
           buildozer -v android debug || echo "Buildozer build failed"
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: CeeCash-APK
           path: bin/*.apk
