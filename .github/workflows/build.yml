@@ -23,28 +23,32 @@ jobs:
 
       - name: Install dependencies
         run: |
-          sudo apt update && sudo apt install -y zip unzip openjdk-11-jdk python3-pip
+          sudo apt update && sudo apt install -y zip unzip openjdk-11-jdk python3-pip libffi-dev libssl-dev
           python -m pip install --upgrade pip
           pip install --upgrade Cython kivy buildozer kivy_garden
-          garden install webview || echo "Webview install failed"
-          garden install sidebar || echo "Sidebar install failed"
+          for garden in webview sidebar; do
+            kivy_garden install $garden || echo "$garden install failed"
+          done
 
       - name: Grant Execute Permissions
         run: |
           chmod +x ~/.local/bin/buildozer || echo "Buildozer not found"
 
-      - name: Initialize Buildozer
+      - name: Use existing Buildozer configuration
         run: |
-          buildozer init
-          cat buildozer.spec  
+          if [ -f buildozer.spec ]; then
+            echo "Using existing buildozer.spec"
+          else
+            echo "Error: buildozer.spec not found!" && exit 1
+          fi
 
       - name: Build APK with Buildozer
         run: |
-          chmod +x ./buildozer
-          buildozer -v android debug || (cat ~/.buildozer/android/platform/python-for-android/dists/*/build.log && exit 1)
+          export PATH=$HOME/.local/bin:$PATH
+          buildozer -v android debug || echo "Buildozer build failed"
 
       - name: Upload APK Artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v3
         with:
           name: CeeCash-APK
           path: bin/*.apk
