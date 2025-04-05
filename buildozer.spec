@@ -4,7 +4,7 @@
 title = cee cash
 
 # (str) Package name
-package.name = cee cash
+package.name = cee_cash
 
 # (str) Package domain (needed for android/ios packaging)
 package.domain = com.stackmorgan.app

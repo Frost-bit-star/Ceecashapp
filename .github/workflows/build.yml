@@ -52,5 +52,5 @@ jobs:
       - name: Upload APK Artifact
         uses: actions/upload-artifact@v4
         with:
-          name: CeeCash-APK
+          name: cee_cash
           path: bin/*.apk
